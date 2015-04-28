@@ -23,14 +23,14 @@ def ua():
 def user(name):
     return render_template('user.html', name=name)
 
-
-@app.route('/asset_sim/api/v1.0/random', methods=["GET"])
-def random_nums():
+@app.route('/asset_sim/api/v1.0/random/', defaults={'draws': 10})
+@app.route('/asset_sim/api/v1.0/random/<int:draws>', methods=["GET"])
+def random_nums(draws):
     """
-    Generates 200 draws from the standard normal and returns them
-    as a JSON object.
+    Generates an arbitrary number of IID draws from the standard normal
+    distibution and returns them as a JSON object.
     """
-    return jsonify(dict(enumerate(np.random.standard_normal(200))))
+    return jsonify(dict(enumerate(np.random.standard_normal(draws))))
 
 
 if __name__ == '__main__':
