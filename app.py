@@ -40,5 +40,6 @@ def random_nums(draws):
 def wiener(sample):
     return jsonify(asset_sim.wiener(sample))
 
+
 if __name__ == '__main__':
     manager.run()
