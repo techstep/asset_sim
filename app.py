@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, render_template, jsonify
 from flask.ext.script import Manager
 from flask.ext.bootstrap import Bootstrap
 import numpy as np
@@ -12,17 +12,6 @@ bootstrap = Bootstrap(app)
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-@app.route('/ua')
-def ua():
-    user_agent = request.headers.get('User-Agent')
-    return '<p>Your browser is %s</p>' % user_agent
-
-
-@app.route('/user/<name>')
-def user(name):
-    return render_template('user.html', name=name)
 
 
 @app.route('/asset_sim/api/v1.0/random/', defaults={'draws': 10})
@@ -40,6 +29,12 @@ def random_nums(draws):
 def wiener(sample):
     return jsonify(asset_sim.wiener(sample))
 
+
+@app.route('/asset_sim/api/v1.0/gbm', defaults={'sample': 100, 'price': 100})
+@app.route('/asset_sim/api/v1.0/gbm/<int:sample>/<float:price>',
+           methods=["GET"])
+def gbm(sample, price):
+    return jsonify(asset_sim.geom_bm(S0=price, N=sample))
 
 if __name__ == '__main__':
     manager.run()
